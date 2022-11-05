@@ -27,21 +27,23 @@ public:
             auto  pos_it = std::find(adjacency_lists.at(e.src).begin(),adjacency_lists.at(e.src).end(), e.dest);
             adjacency_lists.at(e.src).erase(pos_it);
             std::set<Edge> new_terminal_paths = getTerminalPaths(adjacency_lists);
-            if(new_terminal_paths== terminal_paths)
+            if(new_terminal_paths != terminal_paths)
             {
+                adjacency_lists.at(e.src).push_back(e.dest);
+                std::cout << e.src <<":" << e.dest << std::endl;
                 continue;
             }
-            adjacency_lists.at(e.src).push_back(e.dest);
+            
         }
         // create solution
         for(Edge e : edges)
         {
             auto pos_it = std::find(adjacency_lists.at(e.src).begin(),adjacency_lists.at(e.src).end(), e.dest);
-            if(pos_it != adjacency_lists.at(e.src).end())
+            if(pos_it == adjacency_lists.at(e.src).end())
             {
-                m_solution.push_back(1);
-            }else{
                 m_solution.push_back(0);
+            }else{
+                m_solution.push_back(1);
             }
         }
     }
@@ -65,13 +67,15 @@ private:
         auto adjacency_list = m_instance.getGraph().getAdjacencyList();
         int node_counter = 0;
         for(int i : m_node_configuration){
-            if(i == 0)
+            if(i == 1)
             {
-                continue;
+               std::set<Edge> edges = BFSfromTerminal(node_counter, adjaceny_lists);
+               terminal_paths.insert(edges.begin(),edges.end());
             }
-            std::set<Edge> edges = BFSfromTerminal(node_counter, adjaceny_lists);
-            terminal_paths.insert(edges.begin(),edges.end());
+            
             node_counter++;
+            
+            
         }
         return terminal_paths;
     }
@@ -95,7 +99,7 @@ private:
             int current_node = nodes_to_visit.front();
             nodes_to_visit.pop();
             visited_nodes.insert(current_node);
-            if(m_node_configuration.at(current_node) == 1){
+            if(m_node_configuration.at(current_node) == 1 && current_node != node){
                 visitable_terminals.insert(Edge(node,current_node));
             }
             std::vector<int> adjacency_list = adjacency_list_collection.at(current_node);
