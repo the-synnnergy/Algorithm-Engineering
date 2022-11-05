@@ -6,10 +6,6 @@
 #include <sstream>
 #include "graph.cpp"
 
-struct node{
-    int id;
-    bool isTerminal;
-};
 
 class MessInstance
 {
