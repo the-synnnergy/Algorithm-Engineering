@@ -1,3 +1,4 @@
+#pragma once
 #include <vector>
 
 struct Edge
@@ -6,6 +7,18 @@ struct Edge
     : src(src), dest(dest)
     {};
     int src, dest;
+
+    bool operator==(const Edge& b) const
+    {
+        return (src == b.src && dest == b.dest); 
+    }
+
+    bool operator<(const Edge& b) const
+    {
+        if(src < b.src) return true;
+        if(src == b.src && dest < b.dest) return true;
+        return false;
+    }
 };
 
 class Graph
