@@ -1,9 +1,9 @@
-#pragma once
-#include "mess_instance.cpp"
+#include "mess_instance.hpp"
 #include <vector>
 #include <set>
 #include <queue>
 #include <iostream>
+#include <algorithm>
 
 /**
  * No optimization done, i'm stupid with pointers and ref in c++. At least right now.
