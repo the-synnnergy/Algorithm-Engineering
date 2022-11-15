@@ -7,7 +7,7 @@
 namespace io
 {
 
-MessInstance read_instance(const std::string& filename)
+MessInstance read_instance_with_solution(const std::string& filename)
 {
     std::ifstream file;
     file.open(filename);
@@ -45,6 +45,46 @@ MessInstance read_instance(const std::string& filename)
 
     MessInstance instance(number_nodes, adjacency_list, 
                             nodes, instance_name, solution);
+
+    return instance;
+}
+
+MessInstance read_instance(const std::string& filename)
+{
+    std::ifstream file;
+    file.open(filename);
+    if (!file){
+        throw std::runtime_error("Could not open file");
+    }
+    std::string instance_name;
+    getline(file,instance_name);
+    std::string buffer;
+    getline(file,buffer);
+    int number_nodes = stoi(buffer);
+    std::vector<int> nodes;
+    getline(file,buffer);
+    std::for_each(buffer.begin(),buffer.end(),[&](char const & c){
+        nodes.push_back(c - '0');
+    });
+
+    getline(file,buffer);
+    int number_edges = stoi(buffer);
+    int i = 0;
+    std::vector<std::vector<int>> adjacency_list(number_nodes);
+    while (i < number_edges)
+    {
+        int start_node, end_node;
+        std::string edge;
+        getline(file,edge);
+        std::stringstream ss(edge);
+        ss >> start_node >> end_node;
+        adjacency_list[start_node].push_back(end_node);
+        i++;
+    }
+    file.close();
+
+    MessInstance instance(number_nodes, adjacency_list, 
+                            nodes, instance_name);
 
     return instance;
 }

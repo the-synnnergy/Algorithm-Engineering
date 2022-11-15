@@ -1,5 +1,6 @@
 #include "mess_instance.hpp"
 #include <queue>
+#include <iostream>
 
 bool MessInstance::isSolutionValid()
 {

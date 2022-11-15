@@ -30,7 +30,7 @@ public:
             if(new_terminal_paths != terminal_paths)
             {
                 adjacency_lists.at(e.src).push_back(e.dest);
-                std::cout << e.src <<":" << e.dest << std::endl;
+                // std::cout << e.src <<":" << e.dest << std::endl;
                 continue;
             }
             
