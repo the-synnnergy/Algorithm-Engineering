@@ -1,2 +1,4 @@
-solver: graph.hpp solver.cpp
-	g++ -g solver.cpp graph.cpp io.cpp mess_instance.cpp
+solver: FORCE
+	g++ -g -o solver main.cpp graph.cpp io.cpp mess_instance.cpp
+
+FORCE:

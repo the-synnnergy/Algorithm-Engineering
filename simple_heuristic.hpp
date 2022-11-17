@@ -4,19 +4,30 @@
 #include <queue>
 #include <iostream>
 #include <algorithm>
+#include "solver.hpp"
 
 /**
  * No optimization done, i'm stupid with pointers and ref in c++. At least right now.
+ * TODO: Provide explanation of what this class does exactly
  * */
-class SimpleHeuristic
+class SimpleHeuristic : public Solver
 {
 public:
-    SimpleHeuristic(MessInstance i) : m_instance(i)
+    /**
+     * @brief Construct a new SimpleHeuristic object
+     * 
+     * @param instance Instance to be solved
+     */
+    SimpleHeuristic(MessInstance instance) : m_instance(instance)
     {
-        m_node_configuration = i.getNodeConfiguration();
+        m_node_configuration = instance.getNodeConfiguration();
     }
 
-    void solve()
+    /**
+     * @brief Kick off solving process. All the work happens here. 
+     * 
+     */
+    void solve() override
     {
         std::set<Edge> terminal_paths = getTerminalPaths(m_instance.getGraph().getAdjacencyList());
         std::vector<Edge> edges = m_instance.getGraph().getEdgeList();
@@ -48,15 +59,20 @@ public:
         }
     }
 
-    std::vector<int> getSolution()
+/**
+     * @brief Get the Solution after the solving process
+     * 
+     * @return std::vector<bool> Solution, true entry indicates edge is included in solution
+     */
+    std::vector<bool> getSolution() override
     {
         return m_solution;
     }
 
 private:
     MessInstance m_instance;
-    std::vector<int> m_node_configuration;
-    std::vector<int> m_solution;
+    std::vector<bool> m_node_configuration;
+    std::vector<bool> m_solution;
     /**
      * 
      * finds all path from all Terminals to the other Terminals
@@ -67,7 +83,7 @@ private:
         auto adjacency_list = m_instance.getGraph().getAdjacencyList();
         int node_counter = 0;
         for(int i : m_node_configuration){
-            if(i == 1)
+            if(i)
             {
                std::set<Edge> edges = BFSfromTerminal(node_counter, adjaceny_lists);
                terminal_paths.insert(edges.begin(),edges.end());
@@ -99,7 +115,7 @@ private:
             int current_node = nodes_to_visit.front();
             nodes_to_visit.pop();
             visited_nodes.insert(current_node);
-            if(m_node_configuration.at(current_node) == 1 && current_node != node){
+            if(m_node_configuration.at(current_node) && current_node != node){
                 visitable_terminals.insert(Edge(node,current_node));
             }
             std::vector<int> adjacency_list = adjacency_list_collection.at(current_node);

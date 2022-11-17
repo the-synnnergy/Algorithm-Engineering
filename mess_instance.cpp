@@ -15,7 +15,7 @@ std::set<Edge> MessInstance::getTerminalPaths()
     auto adjacency_list = m_graph.getAdjacencyList();
     int node_counter = 0;
     for(int i : m_node_configuration){
-        if(i == 1)
+        if(i)
         {
             std::set<Edge> edges = BFSfromTerminal(node_counter, adjacency_list);
             terminal_paths.insert(edges.begin(),edges.end());
@@ -33,7 +33,7 @@ std::set<Edge> MessInstance::getSolutionTerminalPaths()
     auto adjacency_list = m_subgraph.getAdjacencyList();
     int node_counter = 0;
     for(int i : m_node_configuration){
-        if(i == 1)
+        if(i)
         {
             std::set<Edge> edges = BFSfromTerminal(node_counter, adjacency_list);
             terminal_paths.insert(edges.begin(),edges.end());
@@ -61,7 +61,7 @@ std::set<Edge> MessInstance::BFSfromTerminal(int node, std::vector<std::vector<i
         int current_node = nodes_to_visit.front();
         nodes_to_visit.pop();
         visited_nodes.insert(current_node);
-        if(m_node_configuration.at(current_node) == 1 && current_node != node){
+        if(m_node_configuration.at(current_node) && current_node != node){
             visitable_terminals.insert(Edge(node,current_node));
         }
         std::vector<int> adjacency_list = adjacency_list_collection.at(current_node);

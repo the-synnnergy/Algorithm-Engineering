@@ -3,9 +3,10 @@
 #include <vector>
 #include <algorithm>
 #include "simple_heuristic.hpp"
+#include "solver.hpp"
 #include "io.hpp"
 #include <chrono>
-
+#include <memory>
 
 int main(int argc, char const *argv[])
 {
@@ -18,23 +19,34 @@ int main(int argc, char const *argv[])
     }
     else if (argc == 5 && argv[1] == std::string("-in") && argv[3] == std::string("-out"))
     {
+        //read instance without solution
         MessInstance instance = io::read_instance(argv[2]);
 
+        //start time measurement. Includes solver creation and solving process
         auto start = std::chrono::high_resolution_clock::now();
-        SimpleHeuristic solver(instance);
-        solver.solve();
-        auto solution = solver.getSolution();
-        instance.setSolution(solution);
-        auto end = std::chrono::high_resolution_clock::now();
 
+        //only this line should be changed, rest should remain relatively untouched
+        std::shared_ptr<Solver> solver = std::make_shared<SimpleHeuristic>(instance);
+
+        solver->solve();
+        auto solution = solver->getSolution();
+
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration =  std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+
+        //set the solution in the instance and save it
+        instance.setSolution(solution);
         io::save_instance(argv[4], instance);
 
-
-        std::cout << instance.getSubgraph().getNumberOfEdges() << "\t" << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms" << std::endl; 
+        //output information about the found solution
+        std::cout << instance.getSubgraph().getNumberOfEdges() << "\t" << duration << " ms" << std::endl; 
     }
     else if (argc == 3 && argv[1] == std::string("-eval"))
     {
+        //read instance with solution
         MessInstance instance = io::read_instance_with_solution(argv[2]);
+
+        //instance provides functionality for checking validity, used here 
         if (!instance.isSolutionValid())
         {
             std::cout << "ERROR" << std::endl;
