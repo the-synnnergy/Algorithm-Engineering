@@ -8,7 +8,8 @@
 
 /**
  * No optimization done, i'm stupid with pointers and ref in c++. At least right now.
- * TODO: Provide explanation of what this class does exactly
+ * @brief SimpleHeuristic which removes edges and checks if the subgraph is still valid. If not the edge is added again. Edges are
+ * iterated in the order they are obtained from the graph.
  * */
 class SimpleHeuristic : public Solver
 {
