@@ -1,10 +1,10 @@
-#include "mess_instance.hpp"
+#include "../mess_instance.hpp"
 #include <vector>
 #include <set>
 #include <queue>
 #include <iostream>
 #include <algorithm>
-#include "solver.hpp"
+#include "../solver.hpp"
 
 /**
  * No optimization done, i'm stupid with pointers and ref in c++. At least right now.

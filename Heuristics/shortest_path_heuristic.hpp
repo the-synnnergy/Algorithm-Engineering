@@ -5,8 +5,8 @@
 #ifndef ALGORITHM_ENGINEERING_SHORTEST_PATH_HEURISTIC_H
 #define ALGORITHM_ENGINEERING_SHORTEST_PATH_HEURISTIC_H
 
-#include "mess_instance.hpp"
-#include "solver.hpp"
+#include "../mess_instance.hpp"
+#include "../solver.hpp"
 /**
  * @brief Construction Heuristic which computes shortest paths from all terminals to
  * all other connected terminals and adds those edges to the solution.

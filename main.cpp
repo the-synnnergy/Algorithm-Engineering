@@ -2,7 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#include "simple_heuristic.hpp"
+#include "Heuristics/simple_heuristic.hpp"
 #include "solver.hpp"
 #include "io.hpp"
 #include <chrono>
