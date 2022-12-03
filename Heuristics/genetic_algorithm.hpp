@@ -8,7 +8,9 @@
 #include "../solver.hpp"
 #include "../mess_instance.hpp"
 #include <map>
-
+#include <vector>
+#include <tuple>
+#include <random>
 /**
  * @brief Class which implements a genetic algorithm for the Minimum Equivalent Steiner Subgraph problem. Solution represation as in Ka...
  */
@@ -17,12 +19,15 @@ class GeneticAlgorithm : public Solver {
 private:
     MessInstance m_instance;
     std::vector<bool> m_best_solution;
-    //
+    int m_best_solution_fitness;
+    // Population is a vector containg of a tuple (the chromose) and the fitness value.
     std::vector<std::tuple<std::vector<bool>,int>> m_population;
     std::vector<bool> m_node_configuration;
     double m_mutation_rate = 0.1;
     int m_initial_population = 100;
-
+    std::mt19937 m_generator;
+    int m_generations = 1000;
+    int m_problemsize;
     /**
      * @brief calculates the fitness of a given individual for the genetic algorithm
      * @param individual the individual for which the fitness is calculated
@@ -41,19 +46,24 @@ private:
      */
     std::vector<bool> crossover();
     std::vector<std::vector<bool>> individualSelection();
+    void generate_initial_population();
 public:
-    GeneticAlgorithm(MessInstance instance) : m_instance(instance) {
+    GeneticAlgorithm(MessInstance instance,int seed) : m_instance(instance) {
         m_node_configuration = instance.getNodeConfiguration();
+        m_generator = std::mt19937(seed);
+        m_problemsize = m_instance.getGraph().getEdgeList().size();
     }
 
-    GeneticAlgorithm(MessInstance instance, int population, double mutation_rate) : m_instance(instance) {
+    GeneticAlgorithm(MessInstance instance, int population, double mutation_rate,int seed,int generations) : m_instance(instance) {
         m_initial_population = population;
         m_mutation_rate = mutation_rate;
+        m_generator = std::mt19937(seed);
+        m_generations = generations;
     }
 
     void solve() override;
 
-    std::vector<bool> getSolution() {
+    std::vector<bool> getSolution() override{
         return m_best_solution;
     }
 };

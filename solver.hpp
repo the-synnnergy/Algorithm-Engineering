@@ -1,5 +1,5 @@
 #pragma once
-
+#include <vector>
 /**
  * @brief Abstract class for solvers
  * 

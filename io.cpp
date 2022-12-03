@@ -81,11 +81,17 @@ MessInstance read_instance(const std::string& filename)
     //get number of nodes
     std::string buffer;
     getline(file,buffer);
+
     int number_nodes = stoi(buffer);
 
     //get terminal node configuration
     std::vector<bool> nodes;
     getline(file,buffer);
+    if (buffer[buffer.size() - 1] == '\r')
+        buffer.erase(buffer.size() - 1);
+    if (buffer[buffer.size() - 1] == '\n')
+        buffer.erase(buffer.size() - 1);
+
     std::for_each(buffer.begin(),buffer.end(),[&](char const & c){
         nodes.push_back(c - '0');
     });
