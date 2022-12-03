@@ -19,13 +19,13 @@ private:
     std::vector<bool> m_solution;
 
 public:
-    ShortestPathHeuristic(MessInstance instance) : m_instance(instance)
-    {
-        m_node_configuration = instance.getNodeConfiguration();
-    }
+    explicit ShortestPathHeuristic(MessInstance instance)
+    : m_instance(instance), m_node_configuration(instance.getNodeConfiguration())
+    {}
 
     void solve() override;
 
+    virtual ~ShortestPathHeuristic() = default;
 
 };
 

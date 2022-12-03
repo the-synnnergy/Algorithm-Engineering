@@ -25,7 +25,7 @@ class GraphUtils {
      * @param start_node_id Integer id of the start node.
      * @return A list of lists containing the shortest paths as edge lists, where index of first list is the target node id.
      */
-    static std::vector<std::vector<Edge>> DFS_all_shortest_path(Graph g,int start_node_id);
+    static std::vector<std::vector<Edge>> BFS_shortest_paths_multiple_targets(Graph g, int start_node_id, std::vector<bool> node_configuration);
     /**
      * @brief computes all pairs shortest paths on a given graph g
      * @param g
