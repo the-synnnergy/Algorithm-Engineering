@@ -19,4 +19,6 @@ public:
      * @return std::vector<bool> Solution, true entry indicates edge is included in solution
      */
     virtual std::vector<bool> getSolution() = 0;
+
+    virtual ~Solver() = default;
 };

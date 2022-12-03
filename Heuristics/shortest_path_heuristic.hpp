@@ -7,6 +7,7 @@
 
 #include "../mess_instance.hpp"
 #include "../solver.hpp"
+#include "../Graph/GraphUtils.hpp"
 /**
  * @brief Construction Heuristic which computes shortest paths from all terminals to
  * all other connected terminals and adds those edges to the solution.
@@ -25,7 +26,12 @@ public:
 
     void solve() override;
 
-    virtual ~ShortestPathHeuristic() = default;
+    std::vector<bool> getSolution() override
+    {
+        return m_solution;
+    }
+
+    ~ShortestPathHeuristic() override = default;
 
 };
 
