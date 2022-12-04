@@ -6,6 +6,8 @@
 #include <random>
 #include <algorithm>
 #include <iostream>
+#include "shortest_path_heuristic.hpp"
+
 void GeneticAlgorithm::applyMutation()
 {
     std::uniform_real_distribution<double> distr(0,1);
@@ -116,7 +118,8 @@ void GeneticAlgorithm::generate_initial_population(){
     m_best_solution_fitness = INFINITY;
 
     std::bernoulli_distribution dist;
-    for(int i = 0; i < m_initial_population;i++){
+    for(int i = 0; i < m_initial_population-1;i++){
+        std::cout<< "Generating one individual" << std::endl;
         std::vector<bool> individual_chromosome;
         for(int j = 0; j< m_problemsize;j++){
             individual_chromosome.push_back(dist(m_generator));
@@ -129,6 +132,16 @@ void GeneticAlgorithm::generate_initial_population(){
         }
         m_population.emplace_back(individual_chromosome,fitness);
     }
+    ShortestPathHeuristic heur(m_instance);
+    heur.solve();
+    std::vector<bool> heuristic_solution = heur.getSolution();
+    int heur_fitness = calculateFitness(heuristic_solution);
+    if(heur_fitness < best_fitness){
+        m_best_solution_fitness = heur_fitness;
+        m_best_solution = heuristic_solution;
+    }
+    m_population.emplace_back(std::make_tuple(heuristic_solution,heur_fitness));
+
 
 }
 
