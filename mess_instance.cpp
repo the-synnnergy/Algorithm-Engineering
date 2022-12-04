@@ -1,12 +1,16 @@
 #include "mess_instance.hpp"
 #include <queue>
 #include <iostream>
+#include <unordered_set>
 
 bool MessInstance::isSolutionValid()
 {
-    auto terminal_paths = getTerminalPaths();
+    if(m_terminal_paths.empty()){
+        m_terminal_paths = getTerminalPaths();
+    }
+
     auto solution_terminal_paths = getSolutionTerminalPaths();
-    return terminal_paths == solution_terminal_paths;
+    return m_terminal_paths == solution_terminal_paths;
 }
 
 std::set<Edge> MessInstance::getTerminalPaths()
@@ -40,26 +44,25 @@ std::set<Edge> MessInstance::getSolutionTerminalPaths()
         }
         
         node_counter++;
-        
     }
     return terminal_paths;
 }
 
 std::set<Edge> MessInstance::BFSfromTerminal(int node, std::vector<std::vector<int>> adjacency_list_collection)
 {
-    std::set<int> visited_nodes;
-    std::queue<int> nodes_to_visit;
+    std::unordered_set<int> visited_nodes;
+    std::vector<int> nodes_to_visit;
     std::set<Edge> visitable_terminals;
     std::vector<int> start = adjacency_list_collection.at(node);
     for(int n : start)
     {
-            nodes_to_visit.push(n);
+            nodes_to_visit.push_back(n);
             visited_nodes.insert(n);
     }
     while (!nodes_to_visit.empty())
     {
         int current_node = nodes_to_visit.front();
-        nodes_to_visit.pop();
+        nodes_to_visit.erase(nodes_to_visit.begin());
         visited_nodes.insert(current_node);
         if(m_node_configuration.at(current_node) && current_node != node){
             visitable_terminals.insert(Edge(node,current_node));
@@ -72,7 +75,7 @@ std::set<Edge> MessInstance::BFSfromTerminal(int node, std::vector<std::vector<i
             {
                 continue;
             }
-            nodes_to_visit.push(n);
+            nodes_to_visit.push_back(n);
         }
     }
     return visitable_terminals;

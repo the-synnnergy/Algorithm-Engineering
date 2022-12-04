@@ -125,4 +125,5 @@ private:
     std::vector<bool> m_node_configuration;
     std::string m_description;
     std::vector<bool> m_solution;
+    std::set<Edge> m_terminal_paths;
 };

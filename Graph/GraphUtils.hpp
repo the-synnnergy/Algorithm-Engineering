@@ -6,6 +6,7 @@
 #define ALGORITHM_ENGINEERING_GRAPHUTILS_H
 #include "graph.hpp"
 #include <algorithm>
+#include <map>
 /**
  * @brief Class for collecting utility algorithms to be used on graphs as defined in graph.hpp
  *

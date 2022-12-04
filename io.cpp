@@ -28,6 +28,10 @@ MessInstance read_instance_with_solution(const std::string& filename)
     //get terminal node configuration
     std::vector<bool> nodes;
     getline(file,buffer);
+    if (buffer[buffer.size() - 1] == '\r')
+        buffer.erase(buffer.size() - 1);
+    if (buffer[buffer.size() - 1] == '\n')
+        buffer.erase(buffer.size() - 1);
     std::for_each(buffer.begin(),buffer.end(),[&](char const & c){
         nodes.push_back(c - '0');
     });

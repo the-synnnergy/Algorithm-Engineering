@@ -23,25 +23,24 @@ void GeneticAlgorithm::applyMutation()
 
 std::vector<bool> GeneticAlgorithm::crossover()
 {
-    std::cout<<"Starting crossover" << std::endl;   
     std::vector<std::vector<bool>> individuals = individualSelection();
-    std::cout<<"Selected individualds" << std::endl;
     std::vector<bool> individual_a = individuals[0];
     std::vector<bool> individual_b = individuals[1];
-    std::cout<<"Starting crossover loop" << std::endl;
     std::uniform_int_distribution<int> dist(0,m_problemsize-1);
-    int cut_point = dist(m_generator);
+    int cut_point_1 = dist(m_generator);
+    int cut_point_2 = dist(m_generator);
+    int min_cut = std::min(cut_point_1,cut_point_2);
+    int max_cut = std::max(cut_point_1,cut_point_1);
     std::vector<bool> new_individual;
     for(int i = 0; i < m_problemsize;i++){
         bool node_chromosome;
-        if(i < cut_point){
-            node_chromosome = individual_a[i];
-        }else{
+        if(i <= max_cut && i >= min_cut){
             node_chromosome = individual_b[i];
+        }else{
+            node_chromosome = individual_a[i];
         }
         new_individual.push_back(node_chromosome);
     }
-    std::cout<<"Finished crossover" << std::endl;
     return new_individual;
 }
 
@@ -51,15 +50,11 @@ std::vector<std::vector<bool>> GeneticAlgorithm::individualSelection() {
    std::vector<std::vector<bool>> parents;
    int num_of_tournament_participants = 4;
    // parent selection
-   std::cout<<"Starting loop for individual selection" << std::endl;
    auto return_best = [&] (){
        std::vector<bool> best;
        int best_fitnesss = INFINITY;
-       std::cout<<"in return best" << std::endl;
        for(int i = 0; i< num_of_tournament_participants;i++){
-           std::cout<<"trying to get individual" << std::endl;
            auto individual = this->m_population.at(int_distr(this->m_generator));
-           std::cout<<"got individual" << std::endl;
            if(std::get<1>(individual) < best_fitnesss){
                best = std::get<0>(individual);
            }
@@ -78,49 +73,48 @@ int GeneticAlgorithm::calculateFitness(std::vector<bool> individual){
             fitness++;
         }
     }
-    MessInstance instance(m_instance);
-    instance.setSolution(individual);
-    if(instance.isSolutionValid()){
+
+    m_instance.setSolution(individual);
+    if(m_instance.isSolutionValid()){
         return fitness;
     }
-    return fitness + m_instance.getGraph().getNumberOfEdges();
+    return fitness + (m_problemsize *0.75);
 }
 
 void GeneticAlgorithm::solve(){
     // kick off the algorithm
+
     generate_initial_population();
     std::cout<<m_population.size() << std::endl;
     for(int i = 0;i < m_generations;i++){
-        std::cout<<"Starting loop" << std::endl;
         // do a crossover
         std::vector<bool> individual_chromosome = crossover();
-        std::cout<<"until here" << std::endl;
         int fitness = calculateFitness(individual_chromosome);
         m_population.push_back(std::make_tuple(individual_chromosome,fitness));
         applyMutation();
-        
         auto max = std::max_element(m_population.begin(),m_population.end(),
                                [](const std::tuple<std::vector<bool>,int> &x,
                                   const std::tuple<std::vector<bool>,int> &y) {
                                    return std::get<1>(x) < std::get<1>(y);
                                });
-        if(std::get<1>(*max) < this->m_best_solution_fitness){
-            m_best_solution_fitness = std::get<1>(*max);
-            m_best_solution = std::get<0>(*max);
-        }
         auto min = std::min_element(m_population.begin(),m_population.end(),
-                               [](const std::tuple<std::vector<bool>,int> &x,
-                                  const std::tuple<std::vector<bool>,int> &y) {
-                                   return std::get<1>(x) < std::get<1>(y);
-                               });
-        m_population.erase(min);
+                                    [](const std::tuple<std::vector<bool>,int> &x,
+                                       const std::tuple<std::vector<bool>,int> &y) {
+                                        return std::get<1>(x) < std::get<1>(y);
+                                    });
+        if(std::get<1>(*min) < this->m_best_solution_fitness){
+            m_best_solution_fitness = std::get<1>(*min);
+            m_best_solution = std::get<0>(*min);
+        }
+        m_population.erase(max);
     }
 }
 
 void GeneticAlgorithm::generate_initial_population(){
     // generate initial population.
-    int best_fitness = m_problemsize;
-    m_best_solution_fitness = m_problemsize;
+    int best_fitness = INFINITY;
+    m_best_solution_fitness = INFINITY;
+
     std::bernoulli_distribution dist;
     for(int i = 0; i < m_initial_population;i++){
         std::vector<bool> individual_chromosome;
@@ -133,7 +127,7 @@ void GeneticAlgorithm::generate_initial_population(){
             best_fitness = fitness;
             m_best_solution_fitness = fitness;
         }
-        m_population.push_back(std::make_tuple(individual_chromosome,fitness));
+        m_population.emplace_back(individual_chromosome,fitness);
     }
 
 }
