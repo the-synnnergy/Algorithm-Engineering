@@ -17,10 +17,12 @@ std::vector<std::vector<Edge>> GraphUtils::BFS_shortest_paths_multiple_targets(G
     // array for marking nodes as visited
     int n = g.getNumberOfNodes();
     std::vector<bool> visited(n, false);
-    std::vector<int> predecessors(n, INT32_MAX);
+    std::vector<int> predecessors(n, -1);
 
     // start node is visited
     visited[start_node_id] = true;
+
+    nodes_to_visit.push(start_node_id);
 
     // bfs
     while (!nodes_to_visit.empty())
@@ -46,7 +48,7 @@ std::vector<std::vector<Edge>> GraphUtils::BFS_shortest_paths_multiple_targets(G
     std::vector<std::vector<Edge>> paths;
     for (int i = 0; i < node_configuration.size(); i++)
     {
-        if (node_configuration[i])
+        if (node_configuration[i] && i != start_node_id)
         {
             // add terminal path to shortest paths
             std::vector<Edge> path;
@@ -60,10 +62,29 @@ std::vector<std::vector<Edge>> GraphUtils::BFS_shortest_paths_multiple_targets(G
                 cur = pred;
                 pred = predecessors[cur];
             }
+            std::reverse(path.begin(), path.end());
             paths.push_back(path);
         }
     }
 
     return paths;
 
+}
+
+
+std::vector<std::vector<std::vector<Edge>>> GraphUtils::BFS_all_terminal_shortest_paths(Graph g, std::vector<bool> node_configuration)
+{
+    std::vector<std::vector<std::vector<Edge>>> all_shortest_paths;
+
+
+    for (int i = 0; i < node_configuration.size(); i++)
+    {
+        if (node_configuration[i])
+        {
+            auto shortest_paths = BFS_shortest_paths_multiple_targets(g, i, node_configuration);
+            all_shortest_paths.push_back(shortest_paths);
+        }
+    }
+    return all_shortest_paths;
+    
 }

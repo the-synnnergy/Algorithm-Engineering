@@ -8,7 +8,7 @@
 #include <chrono>
 #include <memory>
 #include "Heuristics/genetic_algorithm.hpp"
-#include "Heuristics/genetic_algorithm.cpp"
+#include "Heuristics/shortest_path_heuristic.hpp"
 
 int main(int argc, char const *argv[])
 {
@@ -28,7 +28,7 @@ int main(int argc, char const *argv[])
         auto start = std::chrono::high_resolution_clock::now();
 
         //only this line should be changed, rest should remain relatively untouched
-        std::shared_ptr<Solver> solver = std::make_shared<GeneticAlgorithm>(instance,1);
+        std::shared_ptr<Solver> solver = std::make_shared<ShortestPathHeuristic>(instance);
 
         solver->solve();
         auto solution = solver->getSolution();
