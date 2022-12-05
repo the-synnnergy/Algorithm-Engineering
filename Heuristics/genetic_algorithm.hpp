@@ -63,11 +63,13 @@ public:
         m_problemsize = m_instance.getGraph().getEdgeList().size();
     }
 
-    GeneticAlgorithm(MessInstance instance, int population, double mutation_rate,int seed,int generations) : m_instance(instance) {
+    GeneticAlgorithm(MessInstance instance, int seed, int population, double mutation_rate,int generations) : m_instance(instance) {
+        m_node_configuration = instance.getNodeConfiguration();
+        m_generator = std::mt19937(seed);
         m_initial_population = population;
         m_mutation_rate = mutation_rate;
-        m_generator = std::mt19937(seed);
         m_generations = generations;
+        m_problemsize = m_instance.getGraph().getEdgeList().size();
     }
 
     void solve() override;

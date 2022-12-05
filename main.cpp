@@ -22,7 +22,7 @@ int main(int argc, char const *argv[])
     else if (argc >= 5 && argv[1] == std::string("-in") && argv[3] == std::string("-out"))
     {
         enum algorithm {gen, sph};
-        algorithm alg = gen;
+        algorithm alg = sph;
         if (argc >= 7 && argv[5] == std::string("-alg"))
         {
             if (argv[6] == std::string("gen"))
@@ -45,11 +45,24 @@ int main(int argc, char const *argv[])
         switch (alg)
         {
             case gen:
-                solver = std::make_shared<GeneticAlgorithm>(instance, 10);
+            {
+                int population = 100;
+                double mut_rate = 0.1;
+                int generations = 1000;
+                if (argc >= 10)
+                {
+                    population = atoi(argv[7]);
+                    mut_rate = atof(argv[8]);
+                    generations = atoi(argv[9]);
+                }
+                solver = std::make_shared<GeneticAlgorithm>(instance, 10, population, mut_rate, generations);
                 break;
+            }
             case sph:
+            {
                 solver = std::make_shared<ShortestPathHeuristic>(instance);
                 break;
+            }
         }
 
         solver->solve();
