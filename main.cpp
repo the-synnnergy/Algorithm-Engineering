@@ -19,8 +19,21 @@ int main(int argc, char const *argv[])
         std::cerr << argv[0] << "-eval dat1" << std::endl;
         return 0;
     }
-    else if (argc == 5 && argv[1] == std::string("-in") && argv[3] == std::string("-out"))
+    else if (argc >= 5 && argv[1] == std::string("-in") && argv[3] == std::string("-out"))
     {
+        enum algorithm {gen, sph};
+        algorithm alg = gen;
+        if (argc >= 7 && argv[5] == std::string("-alg"))
+        {
+            if (argv[6] == std::string("gen"))
+            {
+                alg = gen;
+            }
+            else if (argv[6] == std::string("sph"))
+            {
+                alg = sph;
+            }
+        }
         //read instance without solution
         MessInstance instance = io::read_instance(argv[2]);
 
@@ -28,7 +41,16 @@ int main(int argc, char const *argv[])
         auto start = std::chrono::high_resolution_clock::now();
 
         //only this line should be changed, rest should remain relatively untouched
-        std::shared_ptr<Solver> solver = std::make_shared<ShortestPathHeuristic>(instance);
+        std::shared_ptr<Solver> solver;
+        switch (alg)
+        {
+            case gen:
+                solver = std::make_shared<GeneticAlgorithm>(instance, 10);
+                break;
+            case sph:
+                solver = std::make_shared<ShortestPathHeuristic>(instance);
+                break;
+        }
 
         solver->solve();
         auto solution = solver->getSolution();
