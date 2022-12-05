@@ -38,10 +38,12 @@ int main(int argc, char const *argv[])
 
         //set the solution in the instance and save it
         instance.setSolution(solution);
-        io::save_instance(argv[4], instance);
 
         //output information about the found solution
         std::cout << instance.getSubgraph().getNumberOfEdges() << "\t" << duration << " ms" << std::endl; 
+
+        instance.setDuration(duration);
+        io::save_instance(argv[4], instance);
     }
     else if (argc == 3 && argv[1] == std::string("-eval"))
     {

@@ -119,6 +119,12 @@ public:
     std::set<Edge> BFSfromTerminal(int node, std::vector<std::vector<int>> adjacency_list_collection);
 
 
+    void setDuration(int64_t ms)
+    {
+        m_description += std::string(" Duration to solve [ms]: ");
+        m_description += std::to_string(ms);
+    }
+
 private:
     Graph m_graph;
     Graph m_subgraph;
