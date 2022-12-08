@@ -21,7 +21,7 @@ std::set<Edge> MessInstance::getTerminalPaths()
     for(int i : m_node_configuration){
         if(i)
         {
-            std::cout << "Doing one BFS" << std::endl;
+            //std::cout << "Doing one BFS" << std::endl;
             std::set<Edge> edges = BFSfromTerminal(node_counter, adjacency_list);
             terminal_paths.insert(edges.begin(),edges.end());
         }

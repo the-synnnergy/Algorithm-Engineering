@@ -7,9 +7,7 @@
 void ShortestPathHeuristic::solve()
 {
     auto all_shortest_paths = GraphUtils::BFS_all_terminal_shortest_paths(m_instance.getGraph(), m_node_configuration);
-    std::cout << "Number of terminals: " << all_shortest_paths.size() << std::endl;
-    std::cout << "Number of paths for terminal 1: " << all_shortest_paths[1].size() << std::endl;
-    for (int i = 0; i < all_shortest_paths[0].size(); i++)
+    /*for (int i = 0; i < all_shortest_paths[0].size(); i++)
     {
         std::cout << i << " size: " << all_shortest_paths[i].size() << std::endl;
         for (int j = 0; j < all_shortest_paths[i].size(); j++)
@@ -20,8 +18,8 @@ void ShortestPathHeuristic::solve()
                 std::cout << all_shortest_paths[i][j][k].src << " " << all_shortest_paths[i][j][k].dest << std::endl;
             }
         }
-    }
-    std::cerr << "Solution_edges: " << std::endl;
+    }*/
+    //std::cerr << "Solution_edges: " << std::endl;
 
     // create union of all the different shortest paths
     std::set<Edge> solution_edges;
@@ -35,7 +33,7 @@ void ShortestPathHeuristic::solve()
             }
         }
     }
-    std::cerr << "Solution_edges: " << solution_edges.size() << std::endl;
+    //std::cerr << "Solution_edges: " << solution_edges.size() << std::endl;
 
     auto edges = m_instance.getGraph().getEdgeList();
     std::vector<bool> solution;

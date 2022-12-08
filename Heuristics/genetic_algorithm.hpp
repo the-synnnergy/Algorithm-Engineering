@@ -26,7 +26,7 @@ private:
     std::vector<std::tuple<std::vector<bool>,int>> m_population;
     std::vector<bool> m_node_configuration;
     std::set<Edge> m_terminal_paths;
-    double m_mutation_rate = 0.1;
+    double m_mutation_rate = 0.05;
     int m_initial_population = 100;
     std::mt19937 m_generator;
     int m_generations = 1000;

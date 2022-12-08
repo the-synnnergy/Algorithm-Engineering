@@ -87,7 +87,6 @@ void GeneticAlgorithm::solve(){
     // kick off the algorithm
 
     generate_initial_population();
-    std::cout<<m_population.size() << std::endl;
     for(int i = 0;i < m_generations;i++){
         // do a crossover
         std::vector<bool> individual_chromosome = crossover();
@@ -119,7 +118,6 @@ void GeneticAlgorithm::generate_initial_population(){
 
     std::bernoulli_distribution dist;
     for(int i = 0; i < m_initial_population-1;i++){
-        std::cout<< "Generating one individual" << std::endl;
         std::vector<bool> individual_chromosome;
         for(int j = 0; j< m_problemsize;j++){
             individual_chromosome.push_back(dist(m_generator));
@@ -141,7 +139,5 @@ void GeneticAlgorithm::generate_initial_population(){
         m_best_solution = heuristic_solution;
     }
     m_population.emplace_back(std::make_tuple(heuristic_solution,heur_fitness));
-
-
 }
 
