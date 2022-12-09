@@ -55,7 +55,7 @@ int main(int argc, char const *argv[])
                     mut_rate = atof(argv[8]);
                     generations = atoi(argv[9]);
                 }
-                solver = std::make_shared<GeneticAlgorithm>(instance, 10, population, mut_rate, generations);
+                solver = std::make_shared<GeneticAlgorithm>(instance, 42, population, mut_rate, generations);
                 break;
             }
             case sph:

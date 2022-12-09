@@ -94,6 +94,7 @@ public:
     void setSolution(std::vector<bool> solution)
     {
         m_solution = solution;
+        m_subgraph = Graph(m_graph);
         m_subgraph.buildSubgraph(m_solution);
     }
 

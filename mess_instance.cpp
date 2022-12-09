@@ -5,12 +5,10 @@
 
 bool MessInstance::isSolutionValid()
 {
-    if(m_terminal_paths.empty()){
-        m_terminal_paths = getTerminalPaths();
-    }
+    std::set<Edge> terminal_paths = getTerminalPaths();
 
     auto solution_terminal_paths = getSolutionTerminalPaths();
-    return m_terminal_paths == solution_terminal_paths;
+    return terminal_paths == solution_terminal_paths;
 }
 
 std::set<Edge> MessInstance::getTerminalPaths()

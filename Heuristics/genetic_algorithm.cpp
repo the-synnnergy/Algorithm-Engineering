@@ -69,18 +69,14 @@ std::vector<std::vector<bool>> GeneticAlgorithm::individualSelection() {
 }
 
 int GeneticAlgorithm::calculateFitness(std::vector<bool> individual){
-    int fitness = 0;
-    for(bool chromosome : individual){
-        if(chromosome){
-            fitness++;
-        }
-    }
-
+    int fitness = std::accumulate(individual.begin(),individual.end(),0);
     m_instance.setSolution(individual);
     if(m_instance.isSolutionValid()){
         return fitness;
     }
-    return fitness + (m_problemsize *0.75);
+    int prob_size_punishment = m_problemsize*0.5;
+    int punishment = std::max(m_best_solution_fitness*2,prob_size_punishment);
+    return fitness + punishment;
 }
 
 void GeneticAlgorithm::solve(){
@@ -113,31 +109,33 @@ void GeneticAlgorithm::solve(){
 
 void GeneticAlgorithm::generate_initial_population(){
     // generate initial population.
-    int best_fitness = INFINITY;
-    m_best_solution_fitness = INFINITY;
-
+    m_best_solution_fitness = m_problemsize;
     std::bernoulli_distribution dist;
-    for(int i = 0; i < m_initial_population-1;i++){
+    for(int i = 0; i < m_initial_population-2;i++){
         std::vector<bool> individual_chromosome;
-        for(int j = 0; j< m_problemsize;j++){
-            individual_chromosome.push_back(dist(m_generator));
+        int min_edges = std::accumulate(m_node_configuration.begin(),m_node_configuration.end(),0);
+        while(std::accumulate(individual_chromosome.begin(),individual_chromosome.end(),0) < min_edges ){
+            individual_chromosome.clear();
+            for(int j = 0; j< m_problemsize;j++){
+                individual_chromosome.push_back(dist(m_generator));
+            }
         }
         int fitness = calculateFitness(individual_chromosome);
-        if(fitness < best_fitness){
+        if(fitness < m_best_solution_fitness){
             m_best_solution = individual_chromosome;
-            best_fitness = fitness;
             m_best_solution_fitness = fitness;
         }
         m_population.emplace_back(individual_chromosome,fitness);
     }
+    std::vector<bool> filled_chromose(m_problemsize,true);
+    m_population.emplace_back(filled_chromose,m_problemsize);
     ShortestPathHeuristic heur(m_instance);
     heur.solve();
     std::vector<bool> heuristic_solution = heur.getSolution();
-    int heur_fitness = calculateFitness(heuristic_solution);
-    if(heur_fitness < best_fitness){
-        m_best_solution_fitness = heur_fitness;
-        m_best_solution = heuristic_solution;
-    }
+    int calc_fitness = calculateFitness(heuristic_solution);
+    int heur_fitness = std::accumulate(heuristic_solution.begin(),heuristic_solution.end(),0);
+    m_best_solution_fitness = heur_fitness;
+    m_best_solution = heuristic_solution;
     m_population.emplace_back(std::make_tuple(heuristic_solution,heur_fitness));
 }
 
