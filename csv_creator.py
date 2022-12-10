@@ -17,7 +17,7 @@ for subdir, dirs, files in os.walk(rootdir):
         instance_name = header[0].split()[0]
         print(header)
         print(instance_name)
-        print(int(header[1]))
+        time = int(header[1])
         number_nodes = int(f.readline())
         print(number_nodes)
         terminals = f.readline().count("1")
@@ -34,8 +34,9 @@ for subdir, dirs, files in os.walk(rootdir):
         temp_row.append(terminals)
         temp_row.append(edges)
         temp_row.append(sol)
+        temp_row.append(time)
         results.append(temp_row)
 
 
-df = pd.DataFrame(results,columns=["Instance","Nodes","Terminals","Edges","Solutions"])
-print(df)
+df = pd.DataFrame(results,columns=["Instance","Nodes","Terminals","Edges","Solutions","Time"])
+df.to_csv("solutions.csv")
